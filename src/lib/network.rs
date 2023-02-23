@@ -95,9 +95,9 @@ impl Network<'_> {
     }
     ///
     /// use to lern a model
-    pub fn train(&mut self, inputs: Vec<Vec<f64>>, targets: Vec<Vec<f64>>, epochs: u16) {
+    pub fn train(&mut self, inputs: Vec<Vec<f64>>, targets: Vec<Vec<f64>>, epochs: u32) {
         for i in 1..=epochs {
-            if epochs < 100 || i % (epochs / 100) == 0 {
+            if epochs < 100 || i % (epochs / 10) == 0 {
                 println!("[Network.train] Epoch {:?} of {:?}", i, epochs);
             }
             for j in 0..inputs.len() {
