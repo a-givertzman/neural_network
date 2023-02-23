@@ -31,7 +31,7 @@ impl Matrix {
     }
     ///
     /// matrix filled with random values
-    pub fn rendom(rows: usize, cols: usize) -> Matrix {
+    pub fn random(rows: usize, cols: usize) -> Matrix {
         let mut rng = rand::thread_rng();
         Matrix{
             rows, 

@@ -10,7 +10,7 @@ fn main() {
     let mr = Matrix::zeros(4, 4);
     println!("Matrix zeroz 4x4: {:?}", mr);
 
-    let mr = Matrix::rendom(4, 4);
+    let mr = Matrix::random(4, 4);
     println!("Matrix ranom 4x4: {:?}", mr);
 
     let rows = 4;
