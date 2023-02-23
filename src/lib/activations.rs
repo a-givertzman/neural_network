@@ -14,3 +14,13 @@ pub const SIGMOID: Activation = Activation {
         x * (1.0 - x)
     },
 };
+
+pub const TANH: Activation = Activation {
+    function: &|x| x.tanh(),
+    derivative: &|x| 1.0 - (x.powi(2)),
+};
+
+pub const RELU: Activation = Activation {
+    function: &|x| x.max(0.0),
+    derivative: &|x| if x > 0.0 { 1.0 } else { 0.0 },
+};

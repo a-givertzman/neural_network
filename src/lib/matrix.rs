@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 use rand::Rng;
 
-
+const _DEBUG: bool = false;
 
 #[derive(Debug, Clone)]
 pub struct Matrix {
@@ -40,7 +40,7 @@ impl Matrix {
         //     data: (0..rows).map(|_| {
         //         (0..cols).map(|_| {
         //             // let res = (rowIndex as f64) + (colIndex as f64) / 10.0;
-        //             // println!("rowIndex: {}, colIndex: {} | {:?}", rowIndex, colIndex, res);
+        //             // if _DEBUG {println!("rowIndex: {}, colIndex: {} | {:?}", rowIndex, colIndex, res);}
         //             rng.gen::<f64>() * 2.0 -1.0
         //         }).collect()
         //     }).collect(),
@@ -54,7 +54,7 @@ impl Matrix {
     }
     ///
     /// multyplies a self by other
-    pub fn multiply(&mut self, other: &Matrix) -> Matrix {
+    pub fn multiply(&self, other: &Matrix) -> Matrix {
         if self.cols != other.rows {
             panic!("Inposible to multiply by matrix of incorrect dimesions" );
         }
@@ -72,7 +72,7 @@ impl Matrix {
     }
     ///
     /// adds a self and other
-    pub fn add(&mut self, other: &Matrix) -> Matrix {
+    pub fn add(&self, other: &Matrix) -> Matrix {
         if  self.rows != other.rows || self.cols != other.cols {
             panic!("Inposible to add matrix of incorrect dimesions" );
         }
@@ -86,7 +86,7 @@ impl Matrix {
     }
     ///
     /// dot multiplies self by other matrix
-    pub fn dotMultiply(&mut self, other: &Matrix) -> Matrix {
+    pub fn dotMultiply(&self, other: &Matrix) -> Matrix {
         if  self.rows != other.rows || self.cols != other.cols {
             panic!("Inposible to dot multiply by matrix of incorrect dimesions" );
         }
@@ -100,9 +100,9 @@ impl Matrix {
     }
     ///
     /// subtracts a self and other
-    pub fn subtract(&mut self, other: &Matrix) -> Matrix {
-        println!("self: {:?}", self.clone());
-        println!("other: {:?}", other.clone());
+    pub fn subtract(&self, other: &Matrix) -> Matrix {
+        if _DEBUG {println!("[Matrix.subtract] self: {:?}", self.clone());}
+        if _DEBUG {println!("[Matrix.subtract] other: {:?}", other.clone());}
 
         if self.rows != other.rows || self.cols != other.cols {
             panic!("Inposible to subtract matrix of incorrect dimesions" );
@@ -117,7 +117,7 @@ impl Matrix {
     }
     ///
     /// Maps all element of a matrix
-    pub fn map(&mut self, function: &dyn Fn(f64) -> f64) -> Matrix {
+    pub fn map(&self, function: &dyn Fn(f64) -> f64) -> Matrix {
         Matrix::from(
             (self.data).clone().into_iter().map(|row| {
                 row.into_iter().map(|value| {
@@ -127,8 +127,8 @@ impl Matrix {
         )
     }
     ///
-    /// transposes a matrix
-    pub fn transpose(&mut self) -> Matrix {
+    /// returns a new matrix transposed from self
+    pub fn transpose(&self) -> Matrix {
         let mut res = Matrix::zeros(self.cols, self.rows);
         for i in 0..self.rows {
             for j in 0..self.cols {
