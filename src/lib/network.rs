@@ -60,4 +60,17 @@ impl Network<'_> {
             gradients = self.data[i].map(self.activation.derivative);
         }
     }
+    ///
+    /// use to lern a model
+    pub fn train(&mut self, inputs: Vec<Vec<f64>>, targets: Vec<Vec<f64>>, epochs: u16) {
+        for i in 1..=epochs {
+            if i < 100 || i % (epochs / 100) == 0 {
+                println!("Epoch {:?} of {:?}", i, epochs);
+            }
+            for j in 0..inputs.len() {
+                let outputs = self.feedForward(inputs[j].clone());
+                self.backPropogate(outputs, targets[j].clone());
+            }
+        }
+    }
 }
