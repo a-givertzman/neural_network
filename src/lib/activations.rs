@@ -5,14 +5,14 @@ pub struct Activation<'a> {
     pub derivative: &'a dyn Fn(f64) -> f64,
 }
 
+pub const IDENTITY: Activation = Activation {
+	function: &|x| x,
+	derivative: &|_| 1.0,
+};
 
 pub const SIGMOID: Activation = Activation {
-    function: &|x| {
-        1.0 / (1.0 + E.powf(x))
-    },
-    derivative: &|x| {
-        x * (1.0 - x)
-    },
+    function: &|x| 1.0 / (1.0 + E.powf(-x)),
+    derivative: &|x| x * (1.0 - x),
 };
 
 pub const TANH: Activation = Activation {
