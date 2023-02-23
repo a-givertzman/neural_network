@@ -35,6 +35,7 @@ impl Network<'_> {
         }
         let mut current = Matrix::from(vec![inputs]).transpose();
         self.data = vec![current.clone()];
+        
         for i in 0..self.layers.len() -1 {
             current = self.weights[i]
                 .multiply(&current)
@@ -42,19 +43,29 @@ impl Network<'_> {
                 .map(self.activation.function);
             self.data.push(current.clone());
         }
-        current.data[0].to_owned()
+        current.transpose().data[0].to_owned()
     }
     ///
     pub fn backPropogate(&mut self, outputs: Vec<f64>, targets: Vec<f64>) {
         if targets.len() != self.layers[self.layers.len() -1] {
             panic!("Invalid number of targets");
         }
-        let mut parsed = Matrix::from(vec![outputs]);
-        let mut errors = Matrix::from(vec![targets]).subtract(&parsed);
+        // println!("outputs: {:?}", outputs);
+        // println!("targets: {:?}", targets);
+        let mut parsed = Matrix::from(vec![outputs]).transpose();
+        println!("parsed: {:?}", parsed.clone());
+        let mut errorsTr = Matrix::from(vec![targets]).transpose();
+        println!("errorsTr: {:?}", errorsTr.clone());
+        let mut errors = errorsTr.subtract(&parsed);
         let mut gradients = parsed.map(self.activation.derivative);
         for i in (0..self.layers.len() -1).rev() {
-            gradients = gradients.dotMultiply(&errors).map(&|x| x * self.learningRate);
-            self.weights[i] = self.weights[i].add(&gradients.multiply(&self.data[i].transpose()));
+            gradients = gradients
+                .dotMultiply(&errors)
+                .map(&|x| x * self.learningRate);
+            self.weights[i] = self.weights[i]
+                .add(
+                    &gradients.multiply(&self.data[i].transpose()))
+                ;
             self.biases[i] = self.biases[i].add(&gradients);
             errors = self.weights[i].transpose().multiply(&errors);
             gradients = self.data[i].map(self.activation.derivative);
@@ -68,7 +79,11 @@ impl Network<'_> {
                 println!("Epoch {:?} of {:?}", i, epochs);
             }
             for j in 0..inputs.len() {
+                println!("input {:?}: {:?}", j, inputs[j].clone());
                 let outputs = self.feedForward(inputs[j].clone());
+                println!("[Network.train] outputs: {:?}", outputs.clone());
+                println!("[Network.train] targets: {:?}", targets.clone());
+                println!("[Network.train] targets[{}]: {:?}", j, targets[j].clone());
                 self.backPropogate(outputs, targets[j].clone());
             }
         }

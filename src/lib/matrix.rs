@@ -25,7 +25,7 @@ impl Matrix {
     pub fn from(data: Vec<Vec<f64>>) -> Matrix {
         Matrix { 
             rows: data.len(), 
-            cols: data.first().unwrap().len(), 
+            cols: data[0].len(), 
             data,
         }
     }
@@ -33,17 +33,24 @@ impl Matrix {
     /// matrix filled with random values
     pub fn random(rows: usize, cols: usize) -> Matrix {
         let mut rng = rand::thread_rng();
-        Matrix{
-            rows, 
-            cols,
-            data: (0..rows).map(|_| {
-                (0..cols).map(|_| {
-                    // let res = (rowIndex as f64) + (colIndex as f64) / 10.0;
-                    // println!("rowIndex: {}, colIndex: {} | {:?}", rowIndex, colIndex, res);
-                    rng.gen::<f64>() * 2.0 -1.0
-                }).collect()
-            }).collect(),
+        let mut res = Matrix::zeros(rows, cols);
+        // Matrix{
+        //     rows, 
+        //     cols,
+        //     data: (0..rows).map(|_| {
+        //         (0..cols).map(|_| {
+        //             // let res = (rowIndex as f64) + (colIndex as f64) / 10.0;
+        //             // println!("rowIndex: {}, colIndex: {} | {:?}", rowIndex, colIndex, res);
+        //             rng.gen::<f64>() * 2.0 -1.0
+        //         }).collect()
+        //     }).collect(),
+        // }
+        for i in 0..rows {
+            for j in 0..cols {
+                res.data[i][j] = rng.gen::<f64>() * 2.0 -1.0;
+            }
         }
+        res
     }
     ///
     /// multyplies a self by other
@@ -52,13 +59,13 @@ impl Matrix {
             panic!("Inposible to multiply by matrix of incorrect dimesions" );
         }
         let mut res = Matrix::zeros(self.rows, other.cols);
-        for rowIndex in 0..self.rows {
-            for colIndex in 0..other.cols {
+        for i in 0..self.rows {
+            for j in 0..other.cols {
                 let mut sum = 0.0;
-                for index  in 0..self.cols {
-                    sum += self.data[rowIndex][index] * other.data[index][colIndex];
+                for k  in 0..self.cols {
+                    sum += self.data[i][k] * other.data[k][j];
                 }
-                res.data[rowIndex][colIndex] = sum;
+                res.data[i][j] = sum;
             }
         }
         res
@@ -66,13 +73,13 @@ impl Matrix {
     ///
     /// adds a self and other
     pub fn add(&mut self, other: &Matrix) -> Matrix {
-        if self.cols != other.cols || self.rows != other.rows {
+        if  self.rows != other.rows || self.cols != other.cols {
             panic!("Inposible to add matrix of incorrect dimesions" );
         }
-        let mut res = Matrix::zeros(self.rows, other.cols);
-        for rowIndex in 0..self.rows {
-            for colIndex in 0..self.cols {
-                res.data[rowIndex][colIndex] = self.data[rowIndex][colIndex] + other.data[rowIndex][colIndex];
+        let mut res = Matrix::zeros(self.rows, self.cols);
+        for i in 0..self.rows {
+            for j in 0..self.cols {
+                res.data[i][j] = self.data[i][j] + other.data[i][j];
             }
         }
         res
@@ -80,13 +87,13 @@ impl Matrix {
     ///
     /// dot multiplies self by other matrix
     pub fn dotMultiply(&mut self, other: &Matrix) -> Matrix {
-        if self.cols != other.cols || self.rows != other.rows {
+        if  self.rows != other.rows || self.cols != other.cols {
             panic!("Inposible to dot multiply by matrix of incorrect dimesions" );
         }
-        let mut res = Matrix::zeros(self.rows, other.cols);
-        for rowIndex in 0..self.rows {
-            for colIndex in 0..self.cols {
-                res.data[rowIndex][colIndex] = self.data[rowIndex][colIndex] * other.data[rowIndex][colIndex];
+        let mut res = Matrix::zeros(self.rows, self.cols);
+        for i in 0..self.rows {
+            for j in 0..self.cols {
+                res.data[i][j] = self.data[i][j] * other.data[i][j];
             }
         }
         res
@@ -94,13 +101,16 @@ impl Matrix {
     ///
     /// subtracts a self and other
     pub fn subtract(&mut self, other: &Matrix) -> Matrix {
-        if self.cols != other.cols || self.rows != other.rows {
+        println!("self: {:?}", self.clone());
+        println!("other: {:?}", other.clone());
+
+        if self.rows != other.rows || self.cols != other.cols {
             panic!("Inposible to subtract matrix of incorrect dimesions" );
         }
-        let mut res = Matrix::zeros(self.rows, other.cols);
-        for rowIndex in 0..self.rows {
-            for colIndex in 0..self.cols {
-                res.data[rowIndex][colIndex] = self.data[rowIndex][colIndex] - other.data[rowIndex][colIndex];
+        let mut res = Matrix::zeros(self.rows, self.cols);
+        for i in 0..self.rows {
+            for j in 0..self.cols {
+                res.data[i][j] = self.data[i][j] - other.data[i][j];
             }
         }
         res
