@@ -14,8 +14,8 @@ struct TrainMatrix {
 
 fn trainMatrix(rows: usize, cols: usize, debug: bool) -> TrainMatrix {
     let mut rng = thread_rng();
-    let x = (rng.gen::<f64>() * 6.0 + 0.0).round() as usize;
-    let y = (rng.gen::<f64>() * 6.0 + 0.0).round() as usize;
+    let x = (rng.gen::<f64>() * ((cols -1) as f64) + 0.0).round() as usize;
+    let y = (rng.gen::<f64>() * ((rows -1) as f64) + 0.0).round() as usize;
     let mut rect = vec![vec![0.0; cols]; rows];
     rect[y][x] = 1.0;
     if y > 0 {rect[y -1][x] = 1.0;}
@@ -44,10 +44,11 @@ fn trainMatrix(rows: usize, cols: usize, debug: bool) -> TrainMatrix {
 fn main() {
     env::set_var("RUST_BACKTRACE", "1");
 
-    let learnEpochs = 100;
+    let path = "128x128.json";
+    let learnEpochs = 50;
     let learnDataCount = 100;
-    let rows = 6;
-    let cols = 8;
+    let rows = 64;
+    let cols = 64;
     let dimension = rows * cols;
 
     let mut inputs = vec![];
@@ -66,7 +67,9 @@ fn main() {
         // TANH,
         // RELU,
     );
+    network.load(path.to_string());
     network.train(inputs.clone(), targets.clone(), learnEpochs);
+    network.save(path.to_string());
     for i in 0..inputs.len() {
         let tMatrix = trainMatrix(rows, cols, false);
         let target = vec![(tMatrix.y as f64) * 0.1 + (tMatrix.x as f64) * 0.01];
