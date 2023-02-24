@@ -20,7 +20,7 @@ fn main() {
     let learnCount = 100;
 
     let mut inputs = vec![];
-    let mut targets: Vec<f64> = vec![];
+    let mut targets = vec![];
     let mut rng = thread_rng();
     for i in 0..learnCount {
         let x = (rng.gen::<f64>() * 6.0 + 0.0).round() as usize;
@@ -46,7 +46,7 @@ fn main() {
         }
         
         inputs.push(res);
-        targets.push((y as f64) * 0.1 + (x as f64) * 0.01);
+        targets.push(vec![(y as f64) * 0.1 + (x as f64) * 0.01]);
     }
 
                                 
@@ -57,7 +57,7 @@ fn main() {
         // TANH,
         // RELU,
     );
-    network.train(inputs.clone(), vec![targets.clone()], 1000);
+    network.train(inputs.clone(), targets.clone(), 1000);
     for i in 0..inputs.len() {
         println!("C{:?} -> {:?}", targets[i], network.feedForward(inputs[i].clone()));
     }
