@@ -48,11 +48,11 @@ fn main() {
     let learnDataCount = 100;
     let rows = 6;
     let cols = 8;
+    let dimension = rows * cols;
 
     let mut inputs = vec![];
     let mut targets = vec![];
     for i in 0..learnDataCount {
-        
         let tMatrix = trainMatrix(rows, cols, false);
         inputs.push(tMatrix.data);
         targets.push(vec![(tMatrix.y as f64) * 0.1 + (tMatrix.x as f64) * 0.01]);
@@ -60,7 +60,7 @@ fn main() {
 
                                 
     let mut network = Network::new(
-        vec![49, 98, 98, 49, 1], 
+        vec![dimension, dimension * 2, dimension * 2, dimension, 1], 
         0.4, 
         SIGMOID,
         // TANH,
