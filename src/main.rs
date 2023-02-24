@@ -44,11 +44,11 @@ fn trainMatrix(rows: usize, cols: usize, debug: bool) -> TrainMatrix {
 fn main() {
     env::set_var("RUST_BACKTRACE", "1");
 
-    let path = "128x128.json";
+    let path = "32x32.json";
     let learnEpochs = 50;
     let learnDataCount = 100;
-    let rows = 64;
-    let cols = 64;
+    let rows = 32;
+    let cols = 32;
     let dimension = rows * cols;
 
     let mut inputs = vec![];
