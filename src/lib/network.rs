@@ -72,7 +72,7 @@ impl Network<'_> {
     /// 
     pub fn backPropogate(&mut self, outputs: Vec<f64>, targets: Vec<f64>) {
         if targets.len() != self.layers[self.layers.len() - 1] {
-            panic!("Invalid targets length");
+            panic!("Invalid targets length {:?}, expecting {:?}\n{:?}", targets.len(), self.layers[self.layers.len() - 1], targets);
         }
         // if _DEBUG {println!("[Network.backPropogate] outputs: {:?}", outputs);}
         // if _DEBUG {println!("[Network.backPropogate] targets: {:?}", targets);}
